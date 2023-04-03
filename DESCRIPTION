@@ -14,9 +14,17 @@ Imports:
   ggplot2,
   knitr,
   crayon,
-  titanic
+  titanic,
+  dplyr,
+  msme,
+  patchwork,
+  reshape2,
+  splitTools
 VignetteBuilder:
   knitr
 Suggests: 
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)

@@ -1,0 +1,86 @@
+---
+title: "Real_data_experiments"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Real_data_experiments}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Set up
+
+```{r setup, include = FALSE}
+library(DS23IRLS)
+library(msme)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(patchwork)
+library(splitTools)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = '#>'
+)
+```
+
+# Data sets
+
+All three data sets come from the UCI Repository and are widely known in the ML community. For more details we advise to read the documentation under `?raisin` for raisin dataset. These data sets don't contain any missing, or categorical values, so only preprocessing needed is the removal of co-linear features, which will be detected via Pearson's Correlation.
+
+```{r data sets}
+data('raisin')
+data('occupancy')
+data('banknote')
+knitr::kable(head(raisin))
+knitr::kable(head(occupancy))
+knitr::kable(head(banknote))
+```
+
+## Removing col-linear variables
+
+```{r fig.width = 28, fig.height = 7}
+cor_raisin    <- melt(round(cor(select(raisin, Area, MajorAxisLength, 
+                                       MinorAxisLength, Eccentricity, 
+                                       ConvexArea, Extent, Perimeter)), 2))
+cor_occupancy <- melt(round(cor(select(occupancy, Temperature, Humidity, 
+                                       Light, CO2, HumidityRatio)), 2))
+cor_banknote  <- melt(round(cor(select(banknote, X1, X2, X3, X4)), 2))
+
+plot_heatmaps(cor_raisin, cor_occupancy, cor_banknote)
+```
+
+As we can see, Raisin dataset has the abundance of highly correlated features.
+
+```{r fig.width = 28, fig.height = 7, warning = FALSE}
+raisin    <- raisin[, -c(1, 2, 3, 5)]
+occupancy <- occupancy[, -5]
+banknote  <- banknote[, -3]
+
+cor_raisin    <- melt(round(cor(select(raisin, Eccentricity, 
+                                       Extent, Perimeter)), 2))
+cor_occupancy <- melt(round(cor(select(occupancy, Temperature, Humidity, 
+                                       Light, CO2)), 2))
+cor_banknote  <- melt(round(cor(select(banknote, X1, X2, X4)), 2))
+
+plot_heatmaps(cor_raisin, cor_occupancy, cor_banknote)
+```
+
+After removing the highly correlated values (r rank \> 0.7) we've greatly diminished a Raisin dataset to just three out of seven variables, the occupancy dataset remained as it was, whereas from the banknote we removed X3 feature.
+
+## Train test split
+
+We prepare a train test split from our function which is a wrapper for the split function from `SplitTools`.
+
+```{r}
+raisin_split    <- train_test_split(raisin, p = c(0.2, 0.8))
+occupancy_split <- train_test_split(occupancy, p = c(0.2, 0.8))
+banknote_split  <- train_test_split(banknote, p = c(0.2, 0.8))
+```
+
+# Experiments
+
+## Singular run
+
+```{r}
+
+```
