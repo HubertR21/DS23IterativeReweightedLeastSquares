@@ -10,6 +10,7 @@ vignette: >
 # Set up
 
 ```{r setup, include = FALSE}
+devtools::load_all()
 library(DS23IRLS)
 library(msme)
 library(dplyr)
@@ -17,6 +18,8 @@ library(ggplot2)
 library(reshape2)
 library(patchwork)
 library(splitTools)
+library(MASS)
+library(class)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = '#>'
@@ -72,15 +75,66 @@ After removing the highly correlated values (r rank \> 0.7) we've greatly dimini
 We prepare a train test split from our function which is a wrapper for the split function from `SplitTools`.
 
 ```{r}
-raisin_split    <- train_test_split(raisin, p = c(0.2, 0.8))
-occupancy_split <- train_test_split(occupancy, p = c(0.2, 0.8))
-banknote_split  <- train_test_split(banknote, p = c(0.2, 0.8))
+raisin_split    <- train_test_split(raisin, p = c(0.8, 0.2))
+occupancy_split <- train_test_split(occupancy, p = c(0.8, 0.2))
+banknote_split  <- train_test_split(banknote, p = c(0.8, 0.2))
 ```
 
 # Experiments
 
 ## Singular run
 
+### Raisin
+
+```{r}
+train <- raisin_split$train
+test  <- raisin_split$test
+
+comp_raisin <- compare_models(train, test, interactions = data.frame(a = c('Perimeter'), b = c('Extent')))
+knitr::kable(comp_raisin)
+```
+
+### Occupancy
+
+```{r}
+train <- occupancy_split$train
+test  <- occupancy_split$test
+
+comp_occupancy <- compare_models(train, test, interactions = data.frame(a = c('Light'), b = c('Temperature')))
+knitr::kable(comp_occupancy)
+```
+
+### Banknote
+
+```{r}
+train <- banknote_split$train
+test  <- banknote_split$test
+
+comp_banknote <- compare_models(train, test, interactions = data.frame(a = c('X4'), b = c('X2')))
+knitr::kable(comp_banknote)
+```
+
+
+
+
+## Multiple runs
+
 ```{r}
 
 ```
+```{r fig.width = 14, fig.height = 10, warning = FALSE}
+multiple_eval <- multiple_exp(include_occupancy = TRUE)
+boxplots(multiple_eval$out_raisin)
+```
+
+```{r fig.width = 14, fig.height = 10}
+boxplots(multiple_eval$out_banknote)
+```
+
+```{r fig.width = 14, fig.height = 10}
+
+boxplots(multiple_eval$out_banknote)
+```
+
+
+

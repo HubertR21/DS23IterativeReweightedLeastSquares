@@ -2,8 +2,8 @@ Package: DS23IRLS
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Authors@R: c(person("Adrian", "Stańdo", role = c("aut", "cre"), email = "INPUTMAILADRIAN@gmail.com"),
-    person("Hubert", "Ruczyński", role = c("aut", "aut"), email = "hruczynski21@interia.pl"))
+Authors@R: c(person("Hubert", "Ruczyński", role = c("aut", "cre"), email = "hruczynski21@interia.pl"),
+             person("Adrian", "Stańdo", role = c("aut"), email = "INPUTMAILADRIAN@gmail.com"))
 Description: A small package developed during the Advanced ML course at MiNI WUT.
 License: GPL-3
 Encoding: UTF-8
@@ -19,7 +19,9 @@ Imports:
   msme,
   patchwork,
   reshape2,
-  splitTools
+  splitTools,
+  MASS,
+  class
 VignetteBuilder:
   knitr
 Suggests: 

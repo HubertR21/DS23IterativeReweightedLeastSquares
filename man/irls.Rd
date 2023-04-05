@@ -4,7 +4,7 @@
 \alias{irls}
 \title{A training function for the IRLS - Iterative Reweighted Least Squares algorithm}
 \usage{
-irls(X, y, tol = 1e-04, max_iter = 100, interactions = NULL)
+irls(X, y, tol = 1e-04, max_iter = 100, interactions = NULL, verbose = FALSE)
 }
 \arguments{
 \item{X}{A numeric data.frame object used for the fitting of the method.}
@@ -16,9 +16,19 @@ algorithm. Default value: 100.}
 
 \item{interactions}{A numeric vector introducing the interactions for the model.
 Default value: NULL.}
+
+\item{verbose}{A logical value indicating whether we want to have prints or not.}
 }
 \value{
-
+An object of class irls containing the objects:
+\item{\code{tol}}{}
+\item{\code{max_iter}}{An integer describing the maximum iteration number for the
+algorithm.}
+\item{\code{n_iter}}{An integer describing the actual number of iterations for the
+algorithm.}
+\item{\code{beta}}{A numeric matrix with coefficient values for the data set columns.}
+\item{\code{colnames}}{A character vector with column names from the data frame.}
+\item{\code{interactions}}{A numeric vector describing the interactions for the model.}
 }
 \description{
 A training function for the IRLS - Iterative Reweighted Least Squares algorithm

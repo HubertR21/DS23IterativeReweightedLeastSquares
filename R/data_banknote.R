@@ -11,7 +11,7 @@
 #' @format A data frame with 1372 rows and 5 variables:
 #' \describe{
 #'   \item{X1}{numeric, variance of Wavelet Transformed image}
-#'   \item{X2}{numeric, skewness of Wavelet Transformed image }
+#'   \item{X2}{numeric, skewness of Wavelet Transformed image}
 #'   \item{X3}{numeric, curtosis of Wavelet Transformed image}
 #'   \item{X4}{numeric, ntropy of image}
 #'   \item{y}{integer, class}

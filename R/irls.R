@@ -7,16 +7,17 @@
 #' algorithm. Default value: 100.
 #' @param interactions A numeric vector introducing the interactions for the model.
 #' Default value: NULL.
+#' @param verbose A logical value indicating whether we want to have prints or not.
 #'
 #' @return An object of class irls containing the objects:
 #' \item{\code{tol}}{}
-#' \item{\code{max_iter}{An integer describing the maximum iteration number for the
+#' \item{\code{max_iter}}{An integer describing the maximum iteration number for the
 #' algorithm.}
-#' \item{\code{n_iter}{An integer describing the actual number of iterations for the
+#' \item{\code{n_iter}}{An integer describing the actual number of iterations for the
 #' algorithm.}
-#' \item{\code{beta}{A numeric matrix with coefficient values for the data set columns.}
-#' \item{\code{colnames}{A character vector with column names from the data frame.}
-#' \item{\code{interactions}{A numeric vector describing the interactions for the model.}
+#' \item{\code{beta}}{A numeric matrix with coefficient values for the data set columns.}
+#' \item{\code{colnames}}{A character vector with column names from the data frame.}
+#' \item{\code{interactions}}{A numeric vector describing the interactions for the model.}
 #' @export
 #'
 #' @examples
@@ -28,10 +29,12 @@
 #' y  <- rbind(y1, y2)
 #' m  <- irls(X, y)
 
-irls <- function(X, y, tol = 0.0001, max_iter = 100, interactions = NULL) {
+irls <- function(X, y, tol = 0.0001, max_iter = 100, interactions = NULL, verbose = FALSE) {
   if (is.null(interactions)) {
     X_train <- X
+    verbose_cat('Training the irls model without interactions \n\n', verbose = verbose)
   } else {
+    verbose_cat('Training the irls model with interactions \n\n', verbose = verbose)
     X_train <- data.frame(X)
 
     for (j in 1:nrow(interactions)) {
@@ -52,6 +55,7 @@ irls <- function(X, y, tol = 0.0001, max_iter = 100, interactions = NULL) {
   log_likelihood_old <- Inf
 
   while (i < max_iter && delta > tol) {
+    verbose_cat('Fitting the model, iteration:', i, 'log likelihood:', log_likelihood_old, '\n', verbose = verbose)
     pi1  <- 1 - pi
     W    <- diag(as.vector(pi) * as.vector(pi1))
 
@@ -79,6 +83,7 @@ irls <- function(X, y, tol = 0.0001, max_iter = 100, interactions = NULL) {
     interactions = interactions
   )
 
+  verbose_cat('Training has finished. \n \n', verbose = verbose)
   class(out) <- "irls"
   return(out)
 }
