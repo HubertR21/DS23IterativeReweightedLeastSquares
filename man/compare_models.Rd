@@ -13,8 +13,12 @@ as the last one.}
 \item{test}{A data.frame object being the testing subset with target column
 as the last one.}
 
+\item{tol}{A difference between log-likelihood function values between two iterations below which the algorithm should stop.}
+
 \item{interactions}{A numeric vector introducing the interactions for the model.
 Default value: NULL.}
+
+\item{verbose}{A logical value indicating whether we want to have prints or not.}
 }
 \value{
 A data.frame object with the models names and metrics values.

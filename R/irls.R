@@ -2,7 +2,7 @@
 #'
 #' @param X A numeric data.frame object used for the fitting of the method.
 #' @param y A numeric vector describing the target column.
-#' @param tol
+#' @param tol A difference between log-likelihood function values between two iterations below which the algorithm should stop.
 #' @param max_iter An integer describing the maximum iteration number for the
 #' algorithm. Default value: 100.
 #' @param interactions A numeric vector introducing the interactions for the model.

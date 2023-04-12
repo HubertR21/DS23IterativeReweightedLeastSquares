@@ -7,7 +7,12 @@
 log_likelihood(p, y)
 }
 \arguments{
-\item{y}{}
+\item{p}{Probability for positive class.}
+
+\item{y}{True labels.}
+}
+\value{
+Log-likelihood value.
 }
 \description{
 Calculate log likelihood value

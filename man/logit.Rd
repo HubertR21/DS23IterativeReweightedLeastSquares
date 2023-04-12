@@ -7,7 +7,10 @@
 logit(q)
 }
 \arguments{
-\item{q}{}
+\item{q}{Input for logit function.}
+}
+\value{
+Logit function value.
 }
 \description{
 Calculate logit value

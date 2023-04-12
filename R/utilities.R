@@ -1,9 +1,9 @@
 #' Calculate log likelihood value
 #'
-#' @param p
-#' @param y
+#' @param p Probability for positive class.
+#' @param y True labels.
 #'
-#' @return
+#' @return Log-likelihood value.
 #' @export
 log_likelihood <- function(p, y) {
   return(sum(y * log(p) + (1 - y) * log(1 - p)))
@@ -11,9 +11,9 @@ log_likelihood <- function(p, y) {
 
 #' Calculate logit value
 #'
-#' @param q
+#' @param q Input for logit function.
 #'
-#' @return
+#' @return Logit function value.
 #' @export
 logit <- function(q) {
   return(1 / (1 + exp(-1 * q)))

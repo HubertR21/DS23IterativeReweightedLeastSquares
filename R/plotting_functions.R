@@ -106,12 +106,12 @@ boxplots <- function(df) {
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_boxplot xlab ylab ggtitle geom_point theme_bw theme scale_fill_brewer
 boxplots_coefficients <- function(betas, true_betas) {
-  ggplot(betas, aes(x=value, y=coefficient, fill=coefficient)) +
+  ggplot(betas, aes(x=betas$value, y=betas$coefficient, fill=betas$coefficient)) +
     geom_boxplot() +
     xlab('Coefficient value') +
     ylab('Coefficient') +
     ggtitle('Model coefficients') +
-    geom_point(data=true_betas, aes(x=value, y=coefficient), color='red', size=3) +
+    geom_point(data=true_betas, aes(x=true_betas$value, y=true_betas$coefficient), color='red', size=3) +
     theme_bw() +
     theme(legend.position="none") +
     scale_fill_brewer(palette="Paired")
@@ -125,7 +125,7 @@ boxplots_coefficients <- function(betas, true_betas) {
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_boxplot xlab ylab ggtitle geom_point theme_bw theme scale_fill_brewer
 boxplots_influence_interactions <- function(df) {
-  ggplot(df, aes(x=accuracy, y=interactions, fill=interactions)) +
+  ggplot(df, aes(x=df$accuracy, y=df$interactions, fill=df$interactions)) +
     geom_boxplot() +
     xlab('Model accuracy') +
     ylab('Interactions') +

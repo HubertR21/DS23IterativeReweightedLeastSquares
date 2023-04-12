@@ -11,6 +11,8 @@ irls(X, y, tol = 1e-04, max_iter = 100, interactions = NULL, verbose = FALSE)
 
 \item{y}{A numeric vector describing the target column.}
 
+\item{tol}{A difference between log-likelihood function values between two iterations below which the algorithm should stop.}
+
 \item{max_iter}{An integer describing the maximum iteration number for the
 algorithm. Default value: 100.}
 

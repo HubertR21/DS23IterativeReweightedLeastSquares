@@ -15,9 +15,10 @@
 #' as the last one.
 #' @param test A data.frame object being the testing subset with target column
 #' as the last one.
-#' @param tol
+#' @param tol A difference between log-likelihood function values between two iterations below which the algorithm should stop.
 #' @param interactions A numeric vector introducing the interactions for the model.
 #' Default value: NULL.
+#' @param verbose A logical value indicating whether we want to have prints or not.
 #'
 #' @return A data.frame object with the models names and metrics values.
 #' @export
