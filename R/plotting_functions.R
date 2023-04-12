@@ -96,3 +96,41 @@ boxplots <- function(df) {
 
   (b_acc + b_rec) / (b_pre + b_f1)
 }
+
+#' Create boxplots of model coefficients from multiple experiments on artificial data
+#'
+#' @param betas A data.frame from multiple experiment.
+#' @param true_betas A data.frame with true values of coefficients.
+#'
+#' @return A boxplot presenting model coefficients.
+#' @export
+#' @importFrom ggplot2 ggplot aes geom_boxplot xlab ylab ggtitle geom_point theme_bw theme scale_fill_brewer
+boxplots_coefficients <- function(betas, true_betas) {
+  ggplot(betas, aes(x=value, y=coefficient, fill=coefficient)) +
+    geom_boxplot() +
+    xlab('Coefficient value') +
+    ylab('Coefficient') +
+    ggtitle('Model coefficients') +
+    geom_point(data=true_betas, aes(x=value, y=coefficient), color='red', size=3) +
+    theme_bw() +
+    theme(legend.position="none") +
+    scale_fill_brewer(palette="Paired")
+}
+
+#' Create boxplots of model accuracy scores for investigating the influence of adding the interactions to the model.
+#'
+#' @param df A data.frame from multiple experiment.
+#'
+#' @return A boxplot presenting model coefficients.
+#' @export
+#' @importFrom ggplot2 ggplot aes geom_boxplot xlab ylab ggtitle geom_point theme_bw theme scale_fill_brewer
+boxplots_influence_interactions <- function(df) {
+  ggplot(df, aes(x=accuracy, y=interactions, fill=interactions)) +
+    geom_boxplot() +
+    xlab('Model accuracy') +
+    ylab('Interactions') +
+    ggtitle('Accuracy of the logistic models with and without interactions') +
+    theme_bw() +
+    theme(legend.position="none") +
+    scale_fill_brewer(palette="Paired")
+}

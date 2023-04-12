@@ -141,3 +141,114 @@ multiple_exp <- function(p = c(0.9, 0.8, 0.7, 0.6, 0.5), include_occupancy = TRU
                         out_banknote = out_banknote)
   return(multiple_eval)
 }
+
+#' Runs a multiple experiment on artificial data in order to retrieve model coefficients.
+#'
+#' @param ds A function generating a dataset, the features should be in columns 'x1', 'x2', ..., and the target variable should be in column 'y'
+#' @param L Number of repetitions.
+#' @param verbose A logical value indicating whether we want to print the string
+#' or not.
+#'
+#' @return A dataframe with model coefficients
+#' @export
+multiple_coef <- function(ds, L = 50, verbose = FALSE) {
+  df <- ds()
+  n_col <- length(colnames(df)) -1
+
+  betas <- sapply(
+    1:L,
+    function(i){
+      df <- ds()
+      X <- as.matrix(df[paste0('x', 1:n_col)])
+      model <- DS23IRLS::irls(X, df$y, verbose=verbose)
+      model$beta
+    }
+  )
+
+  betas_names <- paste0('b', 0:n_col)
+  coefficient <- c()
+  value <- c()
+  for(i in 0:n_col){
+    coefficient <- c(coefficient, rep(paste0('b', i), L))
+    value <- c(value, betas[i+1,])
+  }
+
+  data.frame(
+    coefficient = coefficient,
+    value = value
+  )
+}
+
+#' Runs a multiple experiment on artificial data in order to check if method converges.
+#'
+#' @param ds A function generating a dataset, the features should be in columns 'x1', 'x2', ..., and the target variable should be in column 'y'
+#' @param L Number of repetitions.
+#' @param verbose A logical value indicating whether we want to print the string
+#' or not.
+#'
+#' @return A percentage value of the experiments in which the method did not converge.
+#' @export
+multiple_not_converge <- function(ds, L = 50, verbose = FALSE) {
+  df <- ds()
+  n_col <- length(colnames(df)) -1
+
+  results <- unlist(lapply(
+    1:L,
+    function(i){
+      df <- ds()
+      X <- as.matrix(df[paste0('x', 1:n_col)])
+      model <- try(DS23IRLS::irls(X, df$y))
+      if(inherits(model, "try-error")){
+        TRUE
+      } else {
+        FALSE
+      }
+    }
+  ))
+
+  mean(results) * 100
+}
+
+#' Runs a multiple experiment on artificial data in order to check the influence of adding interactions to model on model accuracy.
+#'
+#' @param ds A function generating a dataset, the target variable should be in column 'y'.
+#' @param L Number of repetitions.
+#' @param verbose A logical value indicating whether we want to print the string
+#' or not.
+#' @param interactions A dataframe in which rows define the interactions.
+#'
+#' @return A dataframe containing the accuracy scores for models with interactions and without interactions.
+#' @export
+multiple_compare_interactions <- function(ds, interactions, L = 50, verbose = FALSE) {
+  df <- ds()
+  cols <- colnames(df)
+  cols <- cols[!cols %in% c('y')]
+
+  results <- sapply(
+    1:L,
+    function(i){
+      df <- ds()
+
+      split <- DS23IRLS::train_test_split(df, seed=i)
+      X_train <- as.matrix(split$train[cols])
+      y_train <- split$train$y
+      X_test <- split$test[cols]
+      y_test <- split$test$y
+
+
+      model <-DS23IRLS::irls(X_train, y_train)
+      acc1 <- DS23IRLS::evaluate(y_test, predict(model, X_test, prob=FALSE))$accuracy
+
+      model <-DS23IRLS::irls(X_train, y_train, interactions =interactions)
+      acc2 <- DS23IRLS::evaluate(y_test, predict(model, X_test, prob=FALSE))$accuracy
+
+      c(acc1, acc2)
+    })
+
+  results <- data.frame(
+    interactions = c(rep('without', L), rep('with', L)),
+    accuracy = c(results[1,], results[2,])
+  )
+
+  results
+}

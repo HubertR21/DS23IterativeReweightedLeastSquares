@@ -3,7 +3,7 @@ Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
 Authors@R: c(person("Hubert", "Ruczyński", role = c("aut", "cre"), email = "hruczynski21@interia.pl"),
-             person("Adrian", "Stańdo", role = c("aut"), email = "INPUTMAILADRIAN@gmail.com"))
+             person("Adrian", "Stańdo", role = c("aut"), email = "adrian.j.stando@gmail.com"))
 Description: A small package developed during the Advanced ML course at MiNI WUT.
 License: GPL-3
 Encoding: UTF-8

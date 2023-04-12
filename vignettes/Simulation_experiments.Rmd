@@ -1,0 +1,199 @@
+---
+title: "Simulation_experiments"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulation_experiments}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Set up
+
+```{r setup, include = FALSE}
+devtools::load_all()
+library(DS23IRLS)
+library(msme)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(patchwork)
+library(splitTools)
+library(MASS)
+library(class)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = '#>'
+)
+```
+
+# Datasets
+
+The tests, which aim to verify the implementation, will be conducted on three 
+artificially generated datasets. Each of these is designed to test a different 
+property of the logistic regression method.
+
+## Dataset 1
+
+Generating points from the theoretical logistic model and checking the 
+estimated coefficients. 
+
+The dataset consists of 1000 rows and three variables. The target variable is a 
+binary vector. The data are generated from the mode:
+
+* $y_i \sim Bern(p_i)$
+* $p_i \sim \frac{1}{1+exp(-(2 + 3x_{1,i} + 4x_{2,i} + 5x_{3,i}))}$
+* $x_1, x_2, x_3 \sim N(0, I)$
+
+```{r}
+generate_dataset_1 <- function(){
+  n <- 1000
+  
+  x1 <- rnorm(n, 0, 1)
+  x2 <- rnorm(n, 0, 1)
+  x3 <- rnorm(n, 0, 1)
+  
+  z <- 2 + 3*x1 + 4*x2 + 5*x3
+  
+  p <- 1 / (1 + exp(-z))
+  y <- as.numeric(rbinom(n, 1, p))
+  data.frame(y = y, x1 = x1, x2 = x2, x3 = x3)
+}
+```
+
+
+## Dataset 2
+
+This dataset represents data from two linearly separable classes.
+The points for each cluster will be randomly picked from non-overlapping
+circles. A correct implementation of the method should not converge.
+
+```{r}
+generate_dataset_2 <- function(){
+  n <- 500
+  
+  R <- 5
+  S <- c(0, 0)
+  r <- R * sqrt(runif(n, 0, 1))
+  theta <- runif(n, 0, 1) * 2 * pi
+  df1 <- data.frame(
+    y = 0, 
+    x1 = S[1] + r*cos(theta), 
+    x2 = S[2] + r*sin(theta)
+  )
+  
+  R <- 3
+  S <- c(10, 0)
+  r <- R * sqrt(runif(n, 0, 1))
+  theta <- runif(n, 0, 1) * 2 * pi
+  df2 <- data.frame(
+    y = 1, 
+    x1 = S[1] + r*cos(theta), 
+    x2 = S[2] + r*sin(theta)
+  )
+  
+  rbind(df1, df2)
+}
+```
+
+## Dataset 3
+
+This dataset intends to test the interactions in the logistic model. 
+It represents a very simple real-life situation: the plants grow when they have 
+an access to both water and sun. However, if any is missing, the plants will not
+vegetate. This dataset is generated in a way that the plants have smaller
+probability to grow when they lack water or sun. However, when they have both, 
+the probability to vegetate is high. The classical logistic model would probably 
+not model this situation perfectly, but the interaction between water and sun
+would be meaningful.
+
+```{r}
+generate_dataset_3 <- function(){
+  n <- 250
+  
+  df1 <- data.frame(
+    y = rbinom(n, 1, 0.2), 
+    water = runif(n, 0, 0.5), 
+    sun = runif(n, 0, 0.5)
+  )
+  
+  df2 <- data.frame(
+    y = rbinom(n, 1, 0.3), 
+    water = runif(n, 0.5, 1), 
+    sun = runif(n, 0, 0.5)
+  )
+  
+  df3 <- data.frame(
+    y = rbinom(n, 1, 0.3), 
+    water = runif(n, 0, 0.5), 
+    sun = runif(n, 0.5, 1)
+  )
+  
+  df4 <- data.frame(
+    y = rbinom(n, 1, 0.9), 
+    water = runif(n, 0.5, 1), 
+    sun = runif(n, 0.5, 1)
+  )
+  
+  rbind(df1, df2, df3, df4)
+}
+```
+
+
+# Experiments
+
+## Dataset 1
+
+The boxplot presents the estimated coefficients in the series of experiments 
+and the red dots represent true coefficient values. It is clear from the chart
+that the estimations are correct.
+
+```{r fig.width = 7, fig.height = 5}
+set.seed(0)
+betas <- multiple_coef(generate_dataset_1, L=50)
+
+true_betas <- data.frame(
+   coefficient = c('b0', 'b1', 'b2', 'b3'),
+   value = c(2, 3, 4, 5)
+)
+
+boxplots_coefficients(betas, true_betas)
+
+```
+
+## Dataset 2
+
+The result of that experiment is one number - the percentage of experiments in
+which the algorithm did not converge. The achieved result is as expected - the
+algorithm did not converge in 100% cases.
+
+```{r, warning = FALSE, message = FALSE}
+set.seed(0)
+p <- multiple_not_converge(generate_dataset_2, L=5)
+
+print(paste0("The algorithm did not converge in ", 
+        as.character(p),
+        "% cases."))
+
+```
+
+## Dataset 3
+
+In this experiment, two kinds of logistic models are fitted: with and without
+interactions. Afterwards, the boxplot presenting the accuracy scores for both 
+kinds models are plotted. According to the ground truth behind the dataset 
+generation, added interactions should improve model's predictive power.
+As it is presented in the plot below, the empirical results show the same.
+
+```{r, warning = FALSE, message = FALSE, fig.width = 7, fig.height = 5}
+set.seed(0)
+results <- multiple_compare_interactions(generate_dataset_3, L=50, 
+                                         interactions=data.frame(a = c('water'), b = c('sun')))
+
+boxplots_influence_interactions(results)
+
+
+```
+
+
+
+
