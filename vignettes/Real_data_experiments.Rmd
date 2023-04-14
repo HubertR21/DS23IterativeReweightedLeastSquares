@@ -39,7 +39,9 @@ knitr::kable(head(occupancy))
 knitr::kable(head(banknote))
 ```
 
-## Removing col-linear variables
+## Removing co-linear variables
+
+To ensure obtaining the high quality results we decide to remove co-linear variables, which are the variables having high Pearson's correlation value (over 0.7).
 
 ```{r fig.width = 8, fig.height = 10, warning=FALSE}
 cor_raisin    <- melt(round(cor(select(raisin, Area, MajorAxisLength, 
@@ -52,7 +54,7 @@ cor_banknote  <- melt(round(cor(select(banknote, X1, X2, X3, X4)), 2))
 plot_heatmaps(cor_raisin, cor_occupancy, cor_banknote)
 ```
 
-As we can see, Raisin dataset has the abundance of highly correlated features.
+As we can see, Raisin dataset has the abundance of highly correlated features, and we delete all of them. Finally we end up with the data sets described by 3 or 4 features.
 
 ```{r fig.width = 8, fig.height = 10, warning = FALSE}
 raisin    <- raisin[, -c(1, 2, 3, 5)]
@@ -68,11 +70,11 @@ cor_banknote  <- melt(round(cor(select(banknote, X1, X2, X4)), 2))
 plot_heatmaps(cor_raisin, cor_occupancy, cor_banknote)
 ```
 
-After removing the highly correlated values (r rank \> 0.7) we've greatly diminished a Raisin dataset to just three out of seven variables, the occupancy dataset remained as it was, whereas from the banknote we removed X3 feature.
+After removing the highly correlated values (r rank > 0.7) we've greatly diminished a Raisin dataset to just three out of seven variables, the occupancy dataset remained as it was, whereas from the banknote we removed X3 feature.
 
 ## Train test split
 
-We prepare a train test split from our function which is a wrapper for the split function from `SplitTools`.
+We prepare a train test split from our function which is a wrapper for the split function from `SplitTools`. Additionally we limit the number of observations for the occupancy data set to 2000, as training on all observations is computationally costly.
 
 ```{r}
 occupancy       <- occupancy[1:2000, ]
@@ -84,6 +86,8 @@ banknote_split  <- train_test_split(banknote, p = c(0.8, 0.2))
 # Experiments
 
 ## Singular run
+
+During the first experiment we conduct a singular run of every model and compare the outcomes in form of the table.
 
 ### Raisin
 
@@ -120,6 +124,8 @@ knitr::kable(comp_banknote)
 
 ## Multiple runs
 
+During the second experiment we conduct 5 runs on different split sizes (0.9, 0.8, 0.7, 0.6, 0.5) of every model and compare the outcomes in form of the boxplot.
+
 ### Raisin
 
 ```{r fig.width = 8, fig.height = 10, warning = FALSE}
@@ -127,11 +133,15 @@ multiple_eval <- multiple_exp(include_occupancy = TRUE)
 boxplots(multiple_eval$out_raisin)
 ```
 
+As we can see, KNN, QDA, and LDA algorithms perform poorly in terms of accuracy, which makes us ignore other results, such as perfect recall for the KNN. Other methods are comparable, however our IRLS with interaction is always a bit better.
+
 ### Occupancy
 
 ```{r fig.width = 8, fig.height = 10, warning=FALSE}
 boxplots(multiple_eval$out_occupancy)
 ```
+
+As we can see, KNN, QDA, and LDA algorithms perform poorly in terms of accuracy, which makes us ignore other results, such as perfect recall for the KNN. Other methods are comparable, however our IRLS with interaction is always a bit better.
 
 ### Banknote
 
@@ -139,5 +149,5 @@ boxplots(multiple_eval$out_occupancy)
 boxplots(multiple_eval$out_banknote)
 ```
 
-
+This time, our conclusions are similar, however we can clearly see that our irls with interactions is significantly better than other methods.
 
