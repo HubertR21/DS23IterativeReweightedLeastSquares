@@ -19,7 +19,7 @@ plot_heatmaps <- function(cor_raisin, cor_occupancy, cor_banknote) {
     ggplot2::labs(title = 'Correlation heatmap for Raisin dataset',
                   x = '',
                   y = '') +
-    ggplot2::theme(plot.title = ggplot2::element_text(colour = 'black', size = 25),
+    ggplot2::theme(plot.title = ggplot2::element_text(colour = 'black', size = 10),
                    legend.position = 'none')
 
   occupancy_heatmap <- ggplot2::ggplot(cor_occupancy, ggplot2::aes(cor_occupancy$Var1, cor_occupancy$Var2)) +
@@ -30,7 +30,7 @@ plot_heatmaps <- function(cor_raisin, cor_occupancy, cor_banknote) {
     ggplot2::labs(title = 'Correlation heatmap for Occupancy dataset',
                   x = '',
                   y = '') +
-    ggplot2::theme(plot.title = ggplot2::element_text(colour = 'black', size = 25),
+    ggplot2::theme(plot.title = ggplot2::element_text(colour = 'black', size = 10),
                    legend.position = 'none')
 
   banknote_heatmap <- ggplot2::ggplot(cor_banknote, ggplot2::aes(cor_banknote$Var1, cor_banknote$Var2)) +
@@ -41,9 +41,9 @@ plot_heatmaps <- function(cor_raisin, cor_occupancy, cor_banknote) {
     ggplot2::labs(title = 'Correlation heatmap for Banknote dataset',
                   x = '',
                   y = '') +
-    ggplot2::theme(plot.title = ggplot2::element_text(colour = 'black', size = 25))
+    ggplot2::theme(plot.title = ggplot2::element_text(colour = 'black', size = 10))
 
-  raisin_heatmap + occupancy_heatmap + banknote_heatmap
+  raisin_heatmap / occupancy_heatmap / banknote_heatmap
 }
 
 #' Create boxplots from multiple experiment
@@ -60,9 +60,9 @@ boxplots <- function(df) {
     labs(title = 'Box plot of the accuracy for different models',
          x = 'Model name',
          y = 'Accuracy') +
-    theme(plot.title = element_text(colour = 'black', size = 25),
-          axis.title.x = element_text(colour = 'black', size = 15),
-          axis.title.y = element_text(colour = 'black', size = 15))
+    theme(plot.title = element_text(colour = 'black', size = 13),
+          axis.title.x = element_text(colour = 'black', size = 9),
+          axis.title.y = element_text(colour = 'black', size = 9))
 
   b_rec <- ggplot(data = df, aes(x = df$model_names, y = df$recall)) +
     geom_boxplot(alpha = 0.3, size = 1) +
@@ -70,9 +70,9 @@ boxplots <- function(df) {
     labs(title = 'Box plot of the recall for different models',
          x = 'Model name',
          y = 'Recall') +
-    theme(plot.title = element_text(colour = 'black', size = 25),
-          axis.title.x = element_text(colour = 'black', size = 15),
-          axis.title.y = element_text(colour = 'black', size = 15))
+    theme(plot.title = element_text(colour = 'black', size = 13),
+          axis.title.x = element_text(colour = 'black', size = 9),
+          axis.title.y = element_text(colour = 'black', size = 9))
 
   b_pre <- ggplot(data = df, aes(x = df$model_names, y = df$precision)) +
     geom_boxplot(alpha = 0.3, size = 1) +
@@ -80,9 +80,9 @@ boxplots <- function(df) {
     labs(title = 'Box plot of the precision for different models',
          x = 'Model name',
          y = 'Precision') +
-    theme(plot.title = element_text(colour = 'black', size = 25),
-          axis.title.x = element_text(colour = 'black', size = 15),
-          axis.title.y = element_text(colour = 'black', size = 15))
+    theme(plot.title = element_text(colour = 'black', size = 13),
+          axis.title.x = element_text(colour = 'black', size = 9),
+          axis.title.y = element_text(colour = 'black', size = 9))
 
   b_f1 <- ggplot(data = df, aes(x = df$model_names, y = df$f1)) +
     geom_boxplot(alpha = 0.3, size = 1) +
@@ -90,9 +90,9 @@ boxplots <- function(df) {
     labs(title = 'Box plot of the f1 for different models',
          x = 'Model name',
          y = 'Precision') +
-    theme(plot.title = element_text(colour = 'black', size = 25),
-          axis.title.x = element_text(colour = 'black', size = 15),
-          axis.title.y = element_text(colour = 'black', size = 15))
+    theme(plot.title = element_text(colour = 'black', size = 13),
+          axis.title.x = element_text(colour = 'black', size = 9),
+          axis.title.y = element_text(colour = 'black', size = 9))
 
   (b_acc + b_rec) / (b_pre + b_f1)
 }

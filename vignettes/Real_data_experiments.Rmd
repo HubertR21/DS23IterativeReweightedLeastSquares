@@ -41,7 +41,7 @@ knitr::kable(head(banknote))
 
 ## Removing col-linear variables
 
-```{r fig.width = 28, fig.height = 7}
+```{r fig.width = 8, fig.height = 10, warning=FALSE}
 cor_raisin    <- melt(round(cor(select(raisin, Area, MajorAxisLength, 
                                        MinorAxisLength, Eccentricity, 
                                        ConvexArea, Extent, Perimeter)), 2))
@@ -54,7 +54,7 @@ plot_heatmaps(cor_raisin, cor_occupancy, cor_banknote)
 
 As we can see, Raisin dataset has the abundance of highly correlated features.
 
-```{r fig.width = 28, fig.height = 7, warning = FALSE}
+```{r fig.width = 8, fig.height = 10, warning = FALSE}
 raisin    <- raisin[, -c(1, 2, 3, 5)]
 occupancy <- occupancy[, -5]
 banknote  <- banknote[, -3]
@@ -75,6 +75,7 @@ After removing the highly correlated values (r rank \> 0.7) we've greatly dimini
 We prepare a train test split from our function which is a wrapper for the split function from `SplitTools`.
 
 ```{r}
+occupancy       <- occupancy[1:2000, ]
 raisin_split    <- train_test_split(raisin, p = c(0.8, 0.2))
 occupancy_split <- train_test_split(occupancy, p = c(0.8, 0.2))
 banknote_split  <- train_test_split(banknote, p = c(0.8, 0.2))
@@ -119,20 +120,22 @@ knitr::kable(comp_banknote)
 
 ## Multiple runs
 
-```{r}
+### Raisin
 
-```
-```{r fig.width = 14, fig.height = 10, warning = FALSE}
+```{r fig.width = 8, fig.height = 10, warning = FALSE}
 multiple_eval <- multiple_exp(include_occupancy = TRUE)
 boxplots(multiple_eval$out_raisin)
 ```
 
-```{r fig.width = 14, fig.height = 10}
-boxplots(multiple_eval$out_banknote)
+### Occupancy
+
+```{r fig.width = 8, fig.height = 10, warning=FALSE}
+boxplots(multiple_eval$out_occupancy)
 ```
 
-```{r fig.width = 14, fig.height = 10}
+### Banknote
 
+```{r fig.width = 8, fig.height = 10, warning=FALSE}
 boxplots(multiple_eval$out_banknote)
 ```
 

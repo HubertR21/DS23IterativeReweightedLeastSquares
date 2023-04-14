@@ -110,6 +110,12 @@ multiple_exp <- function(p = c(0.9, 0.8, 0.7, 0.6, 0.5), include_occupancy = TRU
   occupancy <- DS23IRLS::occupancy
   banknote  <- DS23IRLS::banknote
 
+  raisin    <- raisin[, -c(1, 2, 3, 5)]
+  occupancy <- occupancy[, -5]
+  banknote  <- banknote[, -3]
+
+  occupancy <- occupancy[1:2000, ]
+
   for (i in 1:length(p)) {
     verbose_cat('Iteration', i, 'out of', length(p), '\n', verbose = verbose)
     raisin_split    <- train_test_split(raisin, p = c(p[i], 1 - p[i]))
