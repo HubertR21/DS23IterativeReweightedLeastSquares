@@ -106,15 +106,16 @@ boxplots <- function(df) {
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_boxplot xlab ylab ggtitle geom_point theme_bw theme scale_fill_brewer
 boxplots_coefficients <- function(betas, true_betas) {
-  ggplot(betas, aes(x=betas$value, y=betas$coefficient, fill=betas$coefficient)) +
+  ggplot(betas, aes(y=betas$value, x=betas$coefficient)) +
     geom_boxplot() +
-    xlab('Coefficient value') +
-    ylab('Coefficient') +
-    ggtitle('Model coefficients') +
-    geom_point(data=true_betas, aes(x=true_betas$value, y=true_betas$coefficient), color='red', size=3) +
-    theme_bw() +
-    theme(legend.position="none") +
-    scale_fill_brewer(palette="Paired")
+    geom_point(data=true_betas, aes(y=true_betas$value, x=true_betas$coefficient), color='red', size=3) +
+    theme_minimal() +
+    labs(title = 'Box plot of model coefficients',
+         x = 'Coefficient',
+         y = 'Coefficient value') +
+    theme(plot.title = element_text(colour = 'black', size = 13),
+          axis.title.x = element_text(colour = 'black', size = 9),
+          axis.title.y = element_text(colour = 'black', size = 9))
 }
 
 #' Create boxplots of model accuracy scores for investigating the influence of adding the interactions to the model.
@@ -125,12 +126,14 @@ boxplots_coefficients <- function(betas, true_betas) {
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_boxplot xlab ylab ggtitle geom_point theme_bw theme scale_fill_brewer
 boxplots_influence_interactions <- function(df) {
-  ggplot(df, aes(x=df$accuracy, y=df$interactions, fill=df$interactions)) +
+  ggplot(df, aes(y=df$accuracy, x=df$interactions)) +
     geom_boxplot() +
-    xlab('Model accuracy') +
-    ylab('Interactions') +
-    ggtitle('Accuracy of the logistic models with and without interactions') +
-    theme_bw() +
-    theme(legend.position="none") +
-    scale_fill_brewer(palette="Paired")
+    theme_minimal() +
+    labs(title = 'Accuracy of the logistic models with and without interactions',
+         x = 'Interactions',
+         y = 'Model accuracy') +
+    theme(plot.title = element_text(colour = 'black', size = 13),
+          axis.title.x = element_text(colour = 'black', size = 9),
+          axis.title.y = element_text(colour = 'black', size = 9),
+          legend.position="none")
 }

@@ -10,7 +10,7 @@
 #' @param verbose A logical value indicating whether we want to have prints or not.
 #'
 #' @return An object of class irls containing the objects:
-#' \item{\code{tol}}{}
+#' \item{\code{tol}}{A difference between log-likelihood function values between two iterations below which the algorithm should stop.}
 #' \item{\code{max_iter}}{An integer describing the maximum iteration number for the
 #' algorithm.}
 #' \item{\code{n_iter}}{An integer describing the actual number of iterations for the

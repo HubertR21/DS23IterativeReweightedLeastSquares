@@ -168,7 +168,7 @@ algorithm did not converge in 100% cases.
 
 ```{r, warning = FALSE, message = FALSE}
 set.seed(0)
-p <- multiple_not_converge(generate_dataset_2, L=5)
+p <- multiple_not_converge(generate_dataset_2, L=50)
 
 print(paste0("The algorithm did not converge in ", 
         as.character(p),
